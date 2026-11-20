@@ -97,11 +97,11 @@ class SleepCalculator {
 
         val strainAdd = AlgorithmsConfig.SLEEP_STRAIN_ADD_MAX_MIN * (recentStrain / 21.0).coerceIn(0.0, 1.0)
 
-        var debt = 0.0
+        var totalDebt = 0.0
         for (asleep in recentNightsAsleepMin) {
-            debt += maxOf(0.0, personalizedBase - asleep)
+            totalDebt += maxOf(0.0, personalizedBase - asleep)
         }
-        debt = min(debt / recentNightsAsleepMin.size.coerceAtLeast(1) * AlgorithmsConfig.SLEEP_DEBT_FACTOR, AlgorithmsConfig.SLEEP_DEBT_CAP_MIN)
+        val debt = min(totalDebt * AlgorithmsConfig.SLEEP_DEBT_FACTOR, AlgorithmsConfig.SLEEP_DEBT_CAP_MIN)
 
         val need = personalizedBase + strainAdd + debt - napMin
         return SleepNeed(
@@ -147,10 +147,9 @@ class SleepCalculator {
     ): Map<Int, Double> {
         val out = mutableMapOf<Int, Double>()
         for (t in targets) {
-            val required = needMin / (t / 100.0)
-            var bedtime = usualWakeMinFromMidnight - required
-            while (bedtime < 0) bedtime += 1440.0
-            out[t] = bedtime % 1440.0
+            val required = needMin * (t / 100.0)
+            val bedtime = usualWakeMinFromMidnight - required
+            out[t] = bedtime
         }
         return out
     }

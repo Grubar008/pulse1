@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.pulse.app.core.algorithm.BaselineEngine
 import com.pulse.app.core.algorithm.BaselineKeys
 import java.time.Instant
+import kotlin.math.exp
 import org.junit.Test
 
 class BaselineEngineTest {
@@ -40,7 +41,7 @@ class BaselineEngineTest {
 
     @Test
     fun `hrv uses natural log of rmssd`() {
-        val out = BaselineEngine().update(emptyMap(), BaselineEngine.Update(hrvRmssd = Math.E * 4), now)
+        val out = BaselineEngine().update(emptyMap(), BaselineEngine.Update(hrvRmssd = exp(4.0)), now)
         assertThat(out[BaselineKeys.HRV_LN]!!.mean).isWithin(1e-6).of(4.0)
     }
 }

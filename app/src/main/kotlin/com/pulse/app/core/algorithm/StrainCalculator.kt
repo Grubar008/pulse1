@@ -52,7 +52,8 @@ class StrainCalculator {
         if (trimp <= 0) return 0.0
         val c = AlgorithmsConfig.TRIMP_C
         val tMax = AlgorithmsConfig.TRIMP_MAX
-        return 21.0 * ln(1 + trimp / c) / ln(1 + tMax / c)
+        val strain = 21.0 * ln(1 + trimp / c) / ln(1 + tMax / c)
+        return strain.coerceAtMost(21.0)
     }
 
     fun dailyStrain(

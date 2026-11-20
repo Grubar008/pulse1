@@ -91,7 +91,8 @@ class SleepDetailViewModel @Inject constructor(
         val planner = if (wake != null) {
             val wakeMin = wake.hour * 60 + wake.minute
             calc.planner(need.needMin, wakeMin.toDouble()).mapValues { (_, bed) ->
-                "%02d:%02d".format((bed.toInt() / 60) % 24, bed.toInt() % 60)
+                val m = ((bed.toInt() % 1440) + 1440) % 1440
+                "%02d:%02d".format(m / 60, m % 60)
             }
         } else emptyMap()
 

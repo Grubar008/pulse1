@@ -39,10 +39,10 @@ class StrainCalculatorTest {
     }
 
     @Test
-    fun `male factor exceeds female at same hrr`() {
+    fun `female factor exceeds male at same hrr`() {
         val m = calc.trimpForMinute(0.7, Sex.MALE)
         val f = calc.trimpForMinute(0.7, Sex.FEMALE)
-        assertThat(m).isGreaterThan(f)
+        assertThat(f).isGreaterThan(m)
     }
 
     @Test

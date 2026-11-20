@@ -71,7 +71,7 @@ class JournalEngine {
         val v1 = s1 * s1 / n1
         val v0 = s0 * s0 / n0
         val denom = kotlin.math.sqrt(v1 + v0)
-        if (denom == 0.0) return 1.0
+        if (denom == 0.0) return if (m1 != m0) 0.0 else 1.0
         val t = (m1 - m0) / denom
         val num = (v1 + v0) * (v1 + v0)
         val df = num / (v1 * v1 / (n1 - 1) + v0 * v0 / (n0 - 1))

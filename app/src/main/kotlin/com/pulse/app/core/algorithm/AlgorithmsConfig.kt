@@ -25,7 +25,7 @@ object AlgorithmsConfig {
     const val SLEEP_STRAIN_ADD_MAX_MIN = 45.0
     const val SLEEP_DEBT_WINDOW = 5
     const val SLEEP_DEBT_FACTOR = 0.5
-    const val SLEEP_DEBT_CAP_MIN = 120.0
+    const val SLEEP_DEBT_CAP_MIN = 60.0
     const val NAP_MAX_MIN = 180
     const val CONSISTENCY_SCALE = 1.5
 

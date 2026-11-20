@@ -9,7 +9,7 @@ object MathUtil {
 
     const val SQRT2 = 1.4142135623730951
 
-    fun normalCdf(x: Double): Double = 0.5 * erf(-x / SQRT2)
+    fun normalCdf(x: Double): Double = 0.5 * (1.0 + erf(x / SQRT2))
 
     fun erf(x: Double): Double {
         if (x.isNaN()) return x
@@ -38,35 +38,47 @@ object MathUtil {
         require(x in 0.0..1.0) { "x out of range: $x" }
         if (x == 0.0) return 0.0
         if (x == 1.0) return 1.0
-        if (x > (a + 1) / (a + b + 2)) return 1.0 - incompleteBeta(b, a, 1.0 - x)
-
         val lbeta = lnGamma(a + b) - lnGamma(a) - lnGamma(b) + a * ln(x) + b * ln(1.0 - x)
-        val front = exp(lbeta) / a
-
-        var f = 1.0
-        var c = 1.0
-        var d = 0.0
-        for (i in 0..199) {
-            val m = i / 2
-            var num: Double = if (i == 0) 1.0 else m * (b - m) * x / ((a + 2 * m - 1.0) * (a + 2 * m))
-            d = 1.0 + num * d
-            if (d == 0.0) d = 1e-30
-            d = 1.0 / d
-            c = 1.0 + num / c
-            if (c == 0.0) c = 1e-30
-            f *= c * d
-
-            num = -(a + m) * (a + b + m) * x / ((a + 2 * m) * (a + 2 * m + 1.0))
-            d = 1.0 + num * d
-            if (d == 0.0) d = 1e-30
-            d = 1.0 / d
-            c = 1.0 + num / c
-            if (c == 0.0) c = 1e-30
-            val delta = c * d
-            f *= delta
-            if (abs(delta - 1.0) < 1e-10) break
+        val bt = exp(lbeta)
+        return if (x < (a + 1.0) / (a + b + 2.0)) {
+            bt * betacf(a, b, x) / a
+        } else {
+            1.0 - bt * betacf(b, a, 1.0 - x) / b
         }
-        return front * (f - 1.0)
+    }
+
+    private fun betacf(a: Double, b: Double, x: Double): Double {
+        val maxIter = 300
+        val eps = 3.0e-12
+        val fpmin = 1.0e-300
+        val qab = a + b
+        val qap = a + 1.0
+        val qam = a - 1.0
+        var c = 1.0
+        var d = 1.0 - qab * x / qap
+        if (abs(d) < fpmin) d = fpmin
+        d = 1.0 / d
+        var h = d
+        for (m in 1..maxIter) {
+            val twoM = 2 * m
+            var aa = m * (b - m) * x / ((qam + twoM) * (a + twoM))
+            d = 1.0 + aa * d
+            if (abs(d) < fpmin) d = fpmin
+            c = 1.0 + aa / c
+            if (abs(c) < fpmin) c = fpmin
+            d = 1.0 / d
+            h *= d * c
+            aa = -(a + m) * (qab + m) * x / ((a + twoM) * (qap + twoM))
+            d = 1.0 + aa * d
+            if (abs(d) < fpmin) d = fpmin
+            c = 1.0 + aa / c
+            if (abs(c) < fpmin) c = fpmin
+            d = 1.0 / d
+            val del = d * c
+            h *= del
+            if (abs(del - 1.0) < eps) break
+        }
+        return h
     }
 
     fun studentTCdf(t: Double, df: Double): Double {
