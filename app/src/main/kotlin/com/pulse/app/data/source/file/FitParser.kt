@@ -167,6 +167,6 @@ class FitParser {
         const val TYPE_UINT8 = 2
         const val TYPE_UINT16 = 132
         const val TYPE_UINT32 = 134
-        const val SourceIdFile = com.pulse.app.core.model.SourceId.FILE_IMPORT
+        val SourceIdFile = com.pulse.app.core.model.SourceId.FILE_IMPORT
     }
 }

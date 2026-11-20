@@ -1,5 +1,6 @@
 package com.pulse.app.core.model
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.time.LocalDate
@@ -36,6 +37,7 @@ data class SleepSession(
     val stages: List<SleepStage>,
     val source: SourceId
 ) {
+    val durationMin: Long get() = (end.epochSecond - start.epochSecond) / 60
     val asleepMin: Long get() = stages.filter { it.type != SleepStageType.AWAKE }.sumOf { it.durationMin }
 }
 
@@ -80,7 +82,7 @@ enum class ValueType { BOOLEAN, SCALE, MINUTES, SERVINGS }
 data class BehaviorDef(val id: String, val label: String, val valueType: ValueType, val isCustom: Boolean = false)
 
 @Serializable
-data class JournalEntry(val date: LocalDate, val behaviorId: String, val value: Double)
+data class JournalEntry(val date: @Contextual LocalDate, val behaviorId: String, val value: Double)
 
 @Serializable
 data class JournalEffect(
@@ -95,7 +97,7 @@ data class JournalEffect(
 
 @Serializable
 data class Scores(
-    val date: LocalDate,
+    val date: @Contextual LocalDate,
     val recovery: Int? = null,
     val strain: Double? = null,
     val muscularLoad: Double? = null,
@@ -127,4 +129,4 @@ data class UserProfile(
 )
 
 @Serializable
-data class DataCoverage(val metric: MetricType, val sources: List<SourceId>, val lastSeen: Instant?)
+data class DataCoverage(val metric: MetricType, val sources: List<SourceId>, val lastSeen: @Contextual Instant?)

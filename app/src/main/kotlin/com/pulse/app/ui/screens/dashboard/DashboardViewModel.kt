@@ -72,10 +72,6 @@ class DashboardViewModel @Inject constructor(
         val trend = scoresRepository.recent(7)
             .mapNotNull { e -> e.recovery?.let { LocalDate.parse(e.date).atStartOfDay().toInstant(java.time.ZoneOffset.UTC).epochSecond to it } }
 
-        val inputs = scores?.let {
-            runCatching { com.pulse.app.core.model.Scores(inputs = emptyMap()).let { emptyMap<String, Double>() } }.getOrNull()
-        } ?: emptyMap()
-
         val jsonInputs = scores?.inputs?.let {
             runCatching { kotlinx.serialization.json.Json.decodeFromString<Map<String, Double>>(it) }.getOrDefault(emptyMap())
         } ?: emptyMap()

@@ -66,11 +66,12 @@ class CsvParser(private val zone: ZoneId = ZoneId.systemDefault()) {
                     val remVal = cells.getOrNull(remIdx)?.toDoubleOrNull() ?: 0.0
                     val awakeVal = cells.getOrNull(awakeIdx)?.toDoubleOrNull() ?: 0.0
                     val stages = buildList {
-                        var t = start
+                        var t: java.time.Instant = start
                         fun stage(type: SleepStageType, minutes: Double) {
                             if (minutes > 0) {
-                                val endSt = t.plusSeconds((minutes * 60).toLong())
-                                add(SleepStage(type, t, endSt))
+                                val cur = t
+                                val endSt = cur.plusSeconds((minutes * 60).toLong())
+                                add(SleepStage(type, cur, endSt))
                                 t = endSt
                             }
                         }

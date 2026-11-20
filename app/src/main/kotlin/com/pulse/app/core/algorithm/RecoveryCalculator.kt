@@ -28,7 +28,7 @@ class RecoveryCalculator {
         val zRhr = z(input.rhr, baselines, BaselineKeys.RHR, invert = true)
         val zResp = z(input.respRate, baselines, BaselineKeys.RESP, invert = true)
         val zSpo2 = z(input.spo2, baselines, BaselineKeys.SPO2)
-        val zSkin = abs(z(input.skinTempDelta, baselines, BaselineKeys.SKIN_TEMP))
+        val zSkin = z(input.skinTempDelta, baselines, BaselineKeys.SKIN_TEMP)?.let { abs(it) }
         val zSleep = input.sleepPerformance?.let { (it - 75.0) / 15.0 }
 
         val terms = listOfNotNull(

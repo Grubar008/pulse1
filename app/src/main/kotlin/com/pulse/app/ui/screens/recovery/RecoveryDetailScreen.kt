@@ -117,7 +117,7 @@ fun RecoveryDetailScreen(onBack: () -> Unit, vm: RecoveryDetailViewModel = hiltV
                         Text("30-day trend", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
                         LineChart(
-                            series = state.trend30.map { it.first.toDouble() to it.second.toDouble() },
+                            series = state.trend30.map { it.first to it.second.toDouble() },
                             color = PulseColors.Green
                         )
                     }

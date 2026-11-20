@@ -129,7 +129,7 @@ fun DashboardScreen(
                         Text("Recovery — last 7 days", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
                         LineChart(
-                            series = state.trend7.map { it.first.toDouble() to it.second.toDouble() },
+                            series = state.trend7.map { it.first to it.second.toDouble() },
                             color = PulseColors.Green
                         )
                     }

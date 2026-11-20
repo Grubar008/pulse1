@@ -3,6 +3,7 @@ package com.pulse.app.data.source.zepp
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.pulse.app.core.model.*
 import com.pulse.app.data.source.DataSource
+import com.pulse.app.data.source.gateway.AuthResponse
 import com.pulse.app.data.source.gateway.SecureTokenStore
 import com.pulse.app.data.source.gateway.ZeppSummaryDto
 import kotlinx.serialization.json.Json

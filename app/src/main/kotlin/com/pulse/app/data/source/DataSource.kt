@@ -1,6 +1,7 @@
 package com.pulse.app.data.source
 
 import com.pulse.app.core.model.*
+import java.time.Instant
 
 interface DataSource {
     val id: SourceId

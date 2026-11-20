@@ -15,7 +15,6 @@ import androidx.health.connect.client.records.SkinTemperatureRecord
 import androidx.health.connect.client.records.SleepSessionRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.Vo2MaxRecord
-import androidx.health.connect.client.request.ChangesRequest
 import androidx.health.connect.client.request.ChangesTokenRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
@@ -152,7 +151,8 @@ class HealthConnectSource(private val context: Context) : DataSource {
         ExerciseSessionRecord.EXERCISE_TYPE_RUNNING -> "running"
         ExerciseSessionRecord.EXERCISE_TYPE_WALKING -> "walking"
         ExerciseSessionRecord.EXERCISE_TYPE_BIKING -> "biking"
-        ExerciseSessionRecord.EXERCISE_TYPE_SWIMMING -> "swimming"
+        ExerciseSessionRecord.EXERCISE_TYPE_SWIMMING_POOL,
+        ExerciseSessionRecord.EXERCISE_TYPE_SWIMMING_OPEN_WATER -> "swimming"
         ExerciseSessionRecord.EXERCISE_TYPE_STRENGTH_TRAINING -> "strength_training"
         ExerciseSessionRecord.EXERCISE_TYPE_HIKING -> "hiking"
         ExerciseSessionRecord.EXERCISE_TYPE_ROWING -> "rowing"
@@ -171,14 +171,14 @@ class HealthConnectSource(private val context: Context) : DataSource {
 
     override suspend fun readSkinTemp(range: TimeRange): List<com.pulse.app.core.model.SkinTempSample> =
         readRecords(SkinTemperatureRecord::class.java, range).flatMap { rec ->
-            rec.samples.map {
-                com.pulse.app.core.model.SkinTempSample(it.time, it.temperature.inCelsius - 37.0, SourceId.HEALTH_CONNECT)
+            rec.deltas.map {
+                com.pulse.app.core.model.SkinTempSample(it.time, it.temperature.inCelsius, SourceId.HEALTH_CONNECT)
             }
         }
 
     override suspend fun readVo2Max(range: TimeRange): List<Pair<Instant, Double>> =
         readRecords(Vo2MaxRecord::class.java, range).map {
-            it.time to it.vo2MillilitersPerMinuteKilogram.value
+            it.time to it.vo2MillilitersPerMinuteKilogram
         }
 
     suspend fun changesToken(): String? {
@@ -190,10 +190,10 @@ class HealthConnectSource(private val context: Context) : DataSource {
 
     suspend fun readChanges(token: String): ChangesResult {
         val client = clientOrNull() ?: return ChangesResult(emptyList(), token, false)
-        val response = client.getChanges(ChangesRequest(token))
+        val response = client.getChanges(token)
         val upserted = response.changes.filterIsInstance<androidx.health.connect.client.changes.UpsertionChange>()
             .map { it.record }
-        return ChangesResult(upserted, response.changesToken, response.hasMore)
+        return ChangesResult(upserted, response.nextChangesToken, response.hasMore)
     }
 
     data class ChangesResult(val upserted: List<Record>, val nextToken: String, val hasMore: Boolean)

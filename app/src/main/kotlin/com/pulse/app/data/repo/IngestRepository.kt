@@ -51,7 +51,9 @@ class IngestRepository @Inject constructor(private val db: PulseDatabase) {
         }
 
         val touched = mutableSetOf<Instant>()
-        (hr + hrv + spo2).forEach { touched.add(it.ts) }
+        hr.forEach { touched.add(it.ts) }
+        hrv.forEach { touched.add(it.ts) }
+        spo2.forEach { touched.add(it.ts) }
         sleeps.forEach { touched.add(it.end) }
         workouts.forEach { touched.add(it.end) }
 

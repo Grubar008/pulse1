@@ -3,8 +3,8 @@ package com.pulse.app.data.repo
 import com.pulse.app.core.algorithm.*
 import com.pulse.app.core.model.*
 import com.pulse.app.data.db.PulseDatabase
-import com.pulse.app.data.db.entity.ComputedScoresEntity
-import com.pulse.app.data.db.entity.DailyCycleEntity
+import com.pulse.app.data.db.entity.*
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.time.Instant
 import java.time.LocalDate
@@ -44,8 +44,8 @@ class ScoreEngine @Inject constructor(private val db: PulseDatabase) {
             stagesOf(mainSleep, allStages)
         } else null
 
-        val cycleStart = wakeForDate ?: date.atStartOfDay(zone).toInstant()
-        val cycleEnd = cycles.firstOrNull { it.date == date.plusDays(1).toString() }?.wakeTs
+        val cycleStart = wakeForDate?.let { Instant.ofEpochSecond(it) } ?: date.atStartOfDay(zone).toInstant()
+        val cycleEnd = cycles.firstOrNull { it.date == date.plusDays(1).toString() }?.wakeTs?.let { Instant.ofEpochSecond(it) }
             ?: date.plusDays(1).atStartOfDay(zone).toInstant()
 
         val hrSamples = db.hrDao().range(cycleStart.epochSecond, cycleEnd.epochSecond)
@@ -166,8 +166,8 @@ class ScoreEngine @Inject constructor(private val db: PulseDatabase) {
         )
     }
 
-    private fun sleepStart(date: LocalDate, zone: ZoneId): Instant =
-        date.minusDays(1).atTime(20, 0).atZone(zone).toInstant()
+    private fun sleepStart(date: LocalDate, zone: ZoneId): Long =
+        date.minusDays(1).atTime(20, 0).atZone(zone).toInstant().epochSecond
 
     private fun pickMainSleep(
         sessions: List<SleepSessionEntity>,
@@ -188,8 +188,11 @@ class ScoreEngine @Inject constructor(private val db: PulseDatabase) {
         }
     }
 
-    private fun stagesOf(session: SleepSessionEntity, all: List<SleepStageEntity>) =
-        all.filter { it.startTs >= session.startTs && it.endTs <= session.endTs }
+    private fun toModel(s: SleepStageEntity) =
+        SleepStage(s.type, Instant.ofEpochSecond(s.startTs), Instant.ofEpochSecond(s.endTs))
+
+    private fun stagesOf(session: SleepSessionEntity, all: List<SleepStageEntity>): List<SleepStage> =
+        all.filter { it.startTs >= session.startTs && it.endTs <= session.endTs }.map { toModel(it) }
 
     private suspend fun recentNightsAsleep(today: LocalDate, zone: ZoneId): List<Double> {
         val out = mutableListOf<Double>()

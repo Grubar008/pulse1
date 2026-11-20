@@ -3,6 +3,7 @@ package com.pulse.app.data.source.garmin
 import com.pulse.app.core.model.*
 import com.pulse.app.data.source.DataSource
 import com.pulse.app.data.source.gateway.GarminDaily
+import com.pulse.app.data.source.gateway.AuthResponse
 import com.pulse.app.data.source.gateway.GarminLoginRequest
 import com.pulse.app.data.source.gateway.GarminSleepDto
 import com.pulse.app.data.source.gateway.SecureTokenStore
