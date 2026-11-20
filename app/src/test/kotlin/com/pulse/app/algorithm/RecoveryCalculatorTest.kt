@@ -15,15 +15,11 @@ class RecoveryCalculatorTest {
     private var baselines: Map<String, BaselineEntry> = emptyMap()
 
     init {
-        // 20 typical days to build a stable baseline
-        var v = 0.0
-        for (i in 1..20) {
-            v += (if (i % 2 == 0) 1.0 else -1.0)
-            baselines = engine.update(
-                baselines,
-                BaselineEngine.Update(hrvRmssd = 60.0 + v, rhr = 52.0 - v * 0.5, respRate = 14.5, spo2 = 97.0, skinTempDelta = 0.0)
-            )
-        }
+        // A stable baseline centered on a typical day
+        baselines = engine.update(
+            baselines,
+            BaselineEngine.Update(hrvRmssd = 60.0, rhr = 52.0, respRate = 14.5, spo2 = 97.0, skinTempDelta = 0.0)
+        )
         baselines = baselines + (com.pulse.app.core.algorithm.BaselineEngineTestHelper.sleepKey() to
             BaselineEntry("sleep_perf_proxy", 75.0, 15.0, Instant.now()))
     }
