@@ -39,6 +39,7 @@ class NotificationHelper @Inject constructor(
         if (!enabled || recovery == null) return
         if (Build.VERSION.SDK_INT >= 33 &&
             context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) return
 
         val intent = Intent(context, MainActivity::class.java)
         val pending = PendingIntent.getActivity(
