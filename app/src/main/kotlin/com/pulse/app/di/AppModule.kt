@@ -50,9 +50,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    @HealthSource
-    fun provideHealthSource(@ApplicationContext context: Context): DataSource =
+    fun provideHealthConnectSource(@ApplicationContext context: Context): HealthConnectSource =
         HealthConnectSource(context)
+
+    @Provides
+    @Singleton
+    @HealthSource
+    fun provideHealthSource(src: HealthConnectSource): DataSource = src
 
     @Provides
     @Singleton
