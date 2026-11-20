@@ -66,8 +66,8 @@ Hilt · Coroutines/Flow · Room + SQLCipher (encrypted at rest) · WorkManager
 
 Requirements: JDK 17, Android SDK with platform 35. `minSdk 28`, `targetSdk 35`.
 
-There is no checked-in wrapper JAR; run `gradle wrapper --gradle-version 8.7` once, or
-open in Android Studio (which provisions Gradle 8.7 automatically).
+There is no checked-in wrapper JAR; run `gradle wrapper --gradle-version 8.11.1` once, or
+open in Android Studio (which provisions Gradle 8.11.1 automatically).
 
 ## Project layout
 
