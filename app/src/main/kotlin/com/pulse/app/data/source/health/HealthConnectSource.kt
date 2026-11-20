@@ -99,7 +99,7 @@ class HealthConnectSource(private val context: Context) : DataSource {
 
     override suspend fun readHeartRate(range: TimeRange): List<HrSample> =
         readRecords(HeartRateRecord::class.java, range).flatMap { rec ->
-            rec.samples.map { HrSample(it.time, it.beatsPerMinute, SourceId.HEALTH_CONNECT) }
+            rec.samples.map { HrSample(it.time, it.beatsPerMinute.toDouble(), SourceId.HEALTH_CONNECT) }
         }
 
     override suspend fun readHrv(range: TimeRange): List<HrvSample> =
@@ -109,7 +109,7 @@ class HealthConnectSource(private val context: Context) : DataSource {
 
     override suspend fun readRestingHr(range: TimeRange): List<HrSample> =
         readRecords(RestingHeartRateRecord::class.java, range).map {
-            HrSample(it.time, it.beatsPerMinute, SourceId.HEALTH_CONNECT)
+            HrSample(it.time, it.beatsPerMinute.toDouble(), SourceId.HEALTH_CONNECT)
         }
 
     override suspend fun readSleepSessions(range: TimeRange): List<SleepSession> =
@@ -160,8 +160,8 @@ class HealthConnectSource(private val context: Context) : DataSource {
     }
 
     override suspend fun readSpO2(range: TimeRange): List<Spo2Sample> =
-        readRecords(OxygenSaturationRecord::class.java, range).flatMap { rec ->
-            rec.samples.map { Spo2Sample(it.time, it.percentage.value, SourceId.HEALTH_CONNECT) }
+        readRecords(OxygenSaturationRecord::class.java, range).map {
+            Spo2Sample(it.time, it.percentage.value, SourceId.HEALTH_CONNECT)
         }
 
     override suspend fun readRespiratoryRate(range: TimeRange): List<RespSample> =
@@ -172,7 +172,7 @@ class HealthConnectSource(private val context: Context) : DataSource {
     override suspend fun readSkinTemp(range: TimeRange): List<com.pulse.app.core.model.SkinTempSample> =
         readRecords(SkinTemperatureRecord::class.java, range).flatMap { rec ->
             rec.deltas.map {
-                com.pulse.app.core.model.SkinTempSample(it.time, it.temperature.inCelsius, SourceId.HEALTH_CONNECT)
+                com.pulse.app.core.model.SkinTempSample(it.time, it.delta.inCelsius, SourceId.HEALTH_CONNECT)
             }
         }
 

@@ -223,7 +223,7 @@ class ScoreEngine @Inject constructor(private val db: PulseDatabase) {
         val skinAvg = db.skinTempDao().avgBetween(dayStart - 6 * 3600, dayEnd)
 
         val daytimeHr = db.hrDao().range(dayStart + 8 * 3600, dayEnd - 4 * 3600)
-            .filter { it.bpm in 55..110 }
+            .filter { it.bpm in 55.0..110.0 }
             .map { it.bpm }
             .takeIf { it.isNotEmpty() }
             ?.average()

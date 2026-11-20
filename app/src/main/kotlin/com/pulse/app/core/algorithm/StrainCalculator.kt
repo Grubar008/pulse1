@@ -71,7 +71,7 @@ class StrainCalculator {
         setsPerSession: Map<Int, Int> = emptyMap(),
         bodyWeightKg: Double = 75.0
     ): Double {
-        return strengthWorkouts.sum { w ->
+        return strengthWorkouts.sumOf { w ->
             val sets = setsPerSession[w.start.epochSecond.toInt()] ?: (w.durationMin / 5).toInt().coerceAtLeast(3)
             val durationLoad = w.durationMin * 2.0
             val setLoad = sets * 10.0
