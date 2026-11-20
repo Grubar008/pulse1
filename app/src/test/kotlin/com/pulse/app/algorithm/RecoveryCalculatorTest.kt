@@ -24,8 +24,8 @@ class RecoveryCalculatorTest {
                 BaselineEngine.Update(hrvRmssd = 60.0 + v, rhr = 52.0 - v * 0.5, respRate = 14.5, spo2 = 97.0, skinTempDelta = 0.0)
             )
         }
-        baselines[com.pulse.app.core.algorithm.BaselineEngineTestHelper.sleepKey()] =
-            BaselineEntry("sleep_perf_proxy", 75.0, 15.0, Instant.now())
+        baselines = baselines + (com.pulse.app.core.algorithm.BaselineEngineTestHelper.sleepKey() to
+            BaselineEntry("sleep_perf_proxy", 75.0, 15.0, Instant.now()))
     }
 
     @Test
@@ -74,7 +74,7 @@ class RecoveryCalculatorTest {
     }
 
     @Test
-    fun `result clipped to 1..99`() {
+    fun `result clipped to 1 to 99`() {
         for (delta in -10..10) {
             val r = RecoveryCalculator().calculate(
                 RecoveryInput(hrvRmssd = 200.0 + delta * 20),
