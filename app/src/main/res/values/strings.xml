@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Pulse</string>
+    <string name="recovery">Recovery</string>
+    <string name="strain">Strain</string>
+    <string name="sleep">Sleep</string>
+    <string name="stress">Stress</string>
+    <string name="activities">Activities</string>
+    <string name="trends">Trends</string>
+    <string name="journal">Journal</string>
+    <string name="coach">Coach</string>
+    <string name="settings">Settings</string>
+    <string name="connectivity">Connectivity</string>
+    <string name="calibrating">Calibrating</string>
+    <string name="disclaimer">Pulse is not a medical device. All scores are wellness estimates computed on-device and must not be used for diagnosis or treatment.</string>
+    <string name="health_connect_missing">Health Connect is not installed</string>
+    <string name="health_connect_outdated">Health Connect is outdated</string>
+    <string name="sync_now">Sync now</string>
+    <string name="demo_mode">Demo mock data</string>
+    <string name="delete_all_data">Delete all data</string>
+    <string name="export_csv">Export CSV</string>
+</resources>
