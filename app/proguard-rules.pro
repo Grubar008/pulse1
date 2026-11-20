@@ -1,0 +1,6 @@
+-keep class com.pulse.app.data.source.gateway.** { *; }
+-keepattributes *Annotation*, InnerClasses
+-dontnote kotlinx.serialization.AnnotationsKt
+-keep,includedescriptorclasses class com.pulse.app.**$$serializer { *; }
+-keepclassmembers class com.pulse.app.** { *** Companion; }
+-keepclasseswithmembers class com.pulse.app.** { kotlinx.serialization.KSerializer serializer(...); }
